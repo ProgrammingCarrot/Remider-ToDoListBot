@@ -17,9 +17,15 @@ from linebot.v3.webhooks import (
     TextMessageContent
 )
 
+import json
+
 app = Flask(__name__)
-configuration = Configuration(access_token="xoFgrI2e79lUkmKxFrHzD3KUyyacHt26dQMTG19oefBJAum5eez+RB/AcGpi6Vo7nS1VDAR/8KigRwsO72E28UZeMETROan5MfbtGfsH/M+cZ7X5tck7XnfSNoWIXYTK7D1LHTDyzn2phrM+giGt6gdB04t89/1O/w1cDnyilFU=")
-handler = WebhookHandler('b8a3f2419b4c0ed300091ca280afff8b')
+
+with open("./assets/keys.json", "r") as file:
+    keys = json.load(file)
+
+configuration = Configuration(access_token=keys["access_token"])
+handler = WebhookHandler(keys["chennel_secret"])
 
 @app.route("/callback", methods=['POST'])
 def callback():
