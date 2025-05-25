@@ -35,7 +35,7 @@ async def callback():
             event_type = events['type']
             app.logger.info(f"處理事件類型: {event_type}")
             if event_type == "message":
-                await reply_message(json_data)   
+                await reply_message(events)   
 
         return 'OK'
     
