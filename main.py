@@ -49,17 +49,17 @@ async def callback():
 
 async def reply_message(request):
     headers = {'Authorization':'Bearer ' + chennel_access_token,'Content-Type':keys['content_type']}
-    for message_details in request:
-        message = message_details['message']
+    message = request['message']
     reply_token = request['replyToken']
-    reply_message = {
-        "replyToken":reply_token,
-        "messages":
-        {
-            "type":"text",
-            "text":message
+    if message['type'] == "text":
+        reply_message = {
+            "replyToken":reply_token,
+            "messages":
+            {
+                "type":"text",
+                "text":message
+            }
         }
-    }
 
     await requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
 
