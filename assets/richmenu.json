@@ -1,0 +1,50 @@
+{
+    "size": {
+      "width": 2500,
+      "height": 843
+    },
+    "selected": true,
+    "name": "richmenu",
+    "chatBarText": "選單",
+    "areas": [
+      {
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "message",
+          "label": "連結Notion資料庫",
+          "text": "開始連結"
+        }
+      },
+      {
+        "bounds": {
+          "x": 833,
+          "y": 0,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "message",
+          "label": "加入新的事項",
+          "text": "新增待辦事項"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1666,
+          "y": 0,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "message",
+          "label": "今天的待辦事項",
+          "text": "今天要做甚麼"
+        }
+      }
+   ]
+}
