@@ -57,11 +57,11 @@ async def reply_message(request):
             "messages":
             {
                 "type":"text",
-                "text":message
+                "text":message['text']
             }
         }
 
-    await requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
+    requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
 
     
 
