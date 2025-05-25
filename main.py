@@ -48,11 +48,23 @@ async def callback():
         abort(500)  
 
 async def reply_message(request):
+    with open(".\assets\conversations.json") as conversations:
+        conversation = json.load(conversations)
     headers = {'Authorization':'Bearer ' + chennel_access_token,'Content-Type':keys['content_type']}
     message = request['message']
     reply_token = request['replyToken']
     if message['type'] == "text":
-        if message['text'] == keys['connect_Notion']:
+        if message['text'] == conversation['connect_Notion']:
+            reply_message = {
+                "replyToken":reply_token,
+                "messages":
+                [
+                    {
+                        "type":"text",
+                        "text":conversation['response_connect_Notion']
+                    }
+                ]
+            }
             await connect_notion()
         else:
             reply_message = {
@@ -65,14 +77,14 @@ async def reply_message(request):
                     }
                 ]
             }
-            try:
-                # 直接使用 requests.post，不再需要 async with 和 await
-                response = requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message)) # requests 使用 data 參數傳遞 JSON 字串
-                response.raise_for_status() # 如果請求失敗 (4xx 或 5xx)，則拋出 HTTPError 異常
-                app.logger.info(f"成功發送回覆訊息。狀態碼: {response.status_code}")
-                app.logger.debug(f"回覆 API 回應: {response.text}")
-            except requests.exceptions.RequestException as e: # 捕獲 requests 相關的請求錯誤
-                app.logger.error(f"發送回覆訊息失敗: {e}", exc_info=True)
+    try:
+        # 直接使用 requests.post，不再需要 async with 和 await
+        response = requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message)) # requests 使用 data 參數傳遞 JSON 字串
+        response.raise_for_status() # 如果請求失敗 (4xx 或 5xx)，則拋出 HTTPError 異常
+        app.logger.info(f"成功發送回覆訊息。狀態碼: {response.status_code}")
+        app.logger.debug(f"回覆 API 回應: {response.text}")
+    except requests.exceptions.RequestException as e: # 捕獲 requests 相關的請求錯誤
+        app.logger.error(f"發送回覆訊息失敗: {e}", exc_info=True)
 
 async def connect_notion():
     pass
