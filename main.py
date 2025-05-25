@@ -3,6 +3,7 @@ import base64
 import hashlib
 import hmac
 import requests
+import asyncio
 from flask import Flask,request,abort
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ channel_secret = keys["channel_secret"]
 chennel_access_token = keys["access_token"]
 
 @app.route("/",methods = ['POST'])
-def callback():
+async def callback():
     #獲得請求的簽名
     signature = request.headers.get('X-Line-Signature')
 
@@ -30,7 +31,11 @@ def callback():
 
     try:
         json_data = json.loads(body)
-        reply_message(json_data)   
+        for events in json_data['events']:
+            event_type = json_data['type']
+            app.logger.info(f"處理事件類型: {event_type}")
+            if event_type == "message":
+                await reply_message(json_data)   
 
         return 'OK'
     
@@ -42,11 +47,11 @@ def callback():
         app.logger.error(f"處理事件時發生錯誤: {exception}")
         abort(500)  
 
-def reply_message(request):
+async def reply_message(request):
     headers = {'Authorization':'Bearer ' + chennel_access_token,'Content-Type':keys['content_type']}
-    if request['events']['type'] == "message":
-        message = request['events']['messgae']
-        reply_token = request['events']['replyToken']
+    if request['type'] == "message":
+        message = request['messgae']
+        reply_token = request['replyToken']
         reply_message = {
             "replyToken":reply_token,
             "messages":
@@ -57,7 +62,7 @@ def reply_message(request):
         }
     else:
         return 0
-    requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
+    await requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
 
     
 
