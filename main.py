@@ -48,7 +48,7 @@ async def callback():
         abort(500)  
 
 async def reply_message(request):
-    with open(".\assets\conversations.json") as conversations:
+    with open("./assets/conversations.json") as conversations:
         conversation = json.load(conversations)
     headers = {'Authorization':'Bearer ' + chennel_access_token,'Content-Type':keys['content_type']}
     message = request['message']
