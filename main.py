@@ -49,7 +49,8 @@ async def callback():
 
 async def reply_message(request):
     headers = {'Authorization':'Bearer ' + chennel_access_token,'Content-Type':keys['content_type']}
-    message = request['messgae']
+    for message_details in request:
+        message = message_details['message']
     reply_token = request['replyToken']
     reply_message = {
         "replyToken":reply_token,
