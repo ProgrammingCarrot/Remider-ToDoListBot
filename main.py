@@ -19,7 +19,6 @@ def callback():
     signature = request.headers.get('X-Line-Signature')
 
     body = request.get_data(as_text=True)
-    request = json.loads(body)
     #驗證本地簽名和請求簽名是否一致
     try:
         local_signature = base64.b64encode(hmac.new(channel_secret.encode('utf-8'),body.encode('utf-8'), hashlib.sha256).digest()).decode()
