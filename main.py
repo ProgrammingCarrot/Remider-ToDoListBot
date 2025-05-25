@@ -52,18 +52,23 @@ async def reply_message(request):
     message = request['message']
     reply_token = request['replyToken']
     if message['type'] == "text":
-        reply_message = {
-            "replyToken":reply_token,
-            "messages":
-            {
-                "type":"text",
-                "text":message['text']
+        if message['text'] == keys['connect_Notion']:
+            await connect_notion()
+        else:
+            reply_message = {
+                "replyToken":reply_token,
+                "messages":
+                [
+                    {
+                        "type":"text",
+                        "text":message['text']
+                    }
+                ]
             }
-        }
+        requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
 
-    requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
-
-    
+async def connect_notion():
+    pass
 
 
 if __name__ == "__main__":
