@@ -32,7 +32,7 @@ async def callback():
     try:
         json_data = json.loads(body)
         for events in json_data['events']:
-            event_type = json_data['type']
+            event_type = events['type']
             app.logger.info(f"處理事件類型: {event_type}")
             if event_type == "message":
                 await reply_message(json_data)   
@@ -49,19 +49,17 @@ async def callback():
 
 async def reply_message(request):
     headers = {'Authorization':'Bearer ' + chennel_access_token,'Content-Type':keys['content_type']}
-    if request['type'] == "message":
-        message = request['messgae']
-        reply_token = request['replyToken']
-        reply_message = {
-            "replyToken":reply_token,
-            "messages":
-            {
-                "type":"text",
-                "text":message
-            }
+    message = request['messgae']
+    reply_token = request['replyToken']
+    reply_message = {
+        "replyToken":reply_token,
+        "messages":
+        {
+            "type":"text",
+            "text":message
         }
-    else:
-        return 0
+    }
+
     await requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message))
 
     
