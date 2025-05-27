@@ -77,8 +77,12 @@ async def reply_message(request):
                     }
                 ]
             }
-
-        requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message)) # requests 使用 data 參數傳遞 JSON 字串
+        try:
+            requests.post('https://api.line.me/v2/bot/message/reply',headers=headers,data=json.dumps(reply_message)) # requests 使用 data 參數傳遞 JSON 字串
+            app.logger.info(f"事件類型:{message['type']}")
+            app.logger.info(f"回應token:{message['replyToken']}")
+        except Exception as E:
+            app.logger.error(f"錯誤訊息!{E}")
 
 async def connect_notion():
     pass
