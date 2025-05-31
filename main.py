@@ -5,14 +5,19 @@ import hmac
 import requests
 import asyncio
 from flask import Flask,request,abort
+from models import db
+import CRUD
 
 app = Flask(__name__)
 
 with open("./assets/keys.json") as file:
     keys = json.load(file)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = keys["DataBase_URI"]
+app.config['SQLALCHEMY_DATABASE_URI'] = keys["DataBase_URI"]
 channel_secret = keys["channel_secret"]
 chennel_access_token = keys["access_token"]
+db.init_app(app)
 
 @app.route("/",methods = ['POST'])
 async def callback():
@@ -54,18 +59,18 @@ async def reply_message(request):
     message = request['message']
     reply_token = request['replyToken']
     if message['type'] == "text":
-        if message['text'] == conversation['connect_Notion']:
+        if message['text'] == conversation["add_task"]:
             reply_message = {
                 "replyToken":reply_token,
                 "messages":
                 [
                     {
                         "type":"text",
-                        "text":conversation['response_connect_Notion']
+                        "text":conversation["response_add_task"]
                     }
                 ]
             }
-            await connect_notion()
+            await CRUD.Task_Event(request["source"]["userID"],True,False)
         else:
             reply_message = {
                 "replyToken":reply_token,
@@ -83,10 +88,9 @@ async def reply_message(request):
             app.logger.info(f"回應token:{message['replyToken']}")
         except Exception as E:
             app.logger.error(f"錯誤訊息!{E}")
-
-async def connect_notion():
-    pass
-
+    
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run()

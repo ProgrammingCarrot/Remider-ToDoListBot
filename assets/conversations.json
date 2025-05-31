@@ -1,4 +1,6 @@
 {
     "connect_Notion":"開始連結",
-    "response_connect_Notion":"在這裡輸入你的Notion資料庫連結喔"
+    "response_connect_Notion":"在這裡輸入你的Notion資料庫連結喔",
+    "add_task":"新增待辦事項",
+    "response_add_task":"要幫你記住什麼事情呢"
 }
